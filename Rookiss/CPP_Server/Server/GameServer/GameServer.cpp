@@ -15,22 +15,13 @@ public:
 		bool expected = false;
 		bool desired = true;
 
-		// CAS 의사 코드
-		/*if (_locked == expected)
-		{
-			expected = _locked;
-			_locked = desired;
-			return true;
-		}
-		else
-		{
-			expected = _locked;
-			return false;
-		}*/
-
 		while (_locked.compare_exchange_strong(expected, desired) == false)
 		{
 			expected = false; // compare_exchange_strong 에서 bool&를 참조하고 잇으므로 초기값으로 초기화 필요
+
+			//this_thread::sleep_for(std::chrono::milliseconds(100));
+			this_thread::sleep_for(100ms);
+			//this_thread::yield(); // == this_thread::sleep_for(0ms);
 		}
 	}
 
